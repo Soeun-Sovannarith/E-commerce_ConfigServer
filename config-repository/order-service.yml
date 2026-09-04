@@ -1,0 +1,32 @@
+server.port: ${SERVER_PORT:8083}
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5435/orders}
+    username: ${DB_USERNAME:commerce}
+    password: ${DB_PASSWORD:commerce}
+  jpa:
+    open-in-view: false
+    hibernate.ddl-auto: validate
+  security.oauth2.resourceserver.jwt:
+    issuer-uri: ${JWT_ISSUER_URI:http://localhost:8180/realms/commerce}
+    jwk-set-uri: ${JWT_JWK_SET_URI:${JWT_ISSUER_URI:http://localhost:8180/realms/commerce}/protocol/openid-connect/certs}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties.enable.idempotence: true
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+
+resilience4j.circuitbreaker.instances.catalog:
+  sliding-window-size: 10
+  minimum-number-of-calls: 5
+  failure-rate-threshold: 50
+  wait-duration-in-open-state: 10s

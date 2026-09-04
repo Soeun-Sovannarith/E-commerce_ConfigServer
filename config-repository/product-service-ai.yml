@@ -1,0 +1,10 @@
+spring.ai:
+  model:
+    chat: openai
+    embedding: openai
+  openai.api-key: ${OPENAI_API_KEY}
+  vectorstore:
+    type: pgvector
+    pgvector:
+      initialize-schema: true
+      dimensions: 1536

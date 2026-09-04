@@ -1,0 +1,18 @@
+server.port: ${SERVER_PORT:8080}
+
+spring:
+  cloud.gateway.server.webflux:
+    discovery.locator.enabled: false
+    routes:
+      - id: users
+        uri: lb://user-service
+        predicates: ["Path=/api/v1/users/**"]
+      - id: products
+        uri: lb://product-service
+        predicates: ["Path=/api/v1/products/**,/api/v1/ai/**"]
+      - id: orders
+        uri: lb://order-service
+        predicates: ["Path=/api/v1/orders/**,/ws/**"]
+  security.oauth2.resourceserver.jwt:
+    issuer-uri: ${JWT_ISSUER_URI:http://localhost:8180/realms/commerce}
+    jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:8180/realms/commerce/protocol/openid-connect/certs}
